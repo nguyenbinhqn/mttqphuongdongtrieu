@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng tiếp nhận, xử lý phản ánh, kiến nghị của nhân dân</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#cc1c18',
+                            darkRed: '#a8120e',
+                            lightRed: '#fef2f2',
+                            gold: '#fbbf24',
+                            headerGradStart: '#d82c23',
+                            headerGradEnd: '#f36b21'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6f8;
+        }
+        .gradient-header {
+            background: linear-gradient(135deg, #cc1c18 0%, #ea580c 100%);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800">
+
+    <header class="w-full">
+        <!-- Top Official Banner -->
+        <div class="gradient-header text-white px-4 py-5 shadow-md relative overflow-hidden">
+            <div class="max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left relative z-10">
+                <!-- Emblem / Logo Placeholder -->
+                <div class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 flex items-center justify-center bg-white rounded-full p-1.5 shadow-lg border-2 border-yellow-300">
+                    <img src="MTTQ.png" alt="Logo" class="w-20 h-20 sm:w-24 sm:h-24 object-contain">
+                </div>
+                <!-- Title Text -->
+                <div class="flex-1">
+                    <h2 class="text-xs sm:text-sm uppercase tracking-wider font-semibold text-yellow-200 mb-0.5">
+                        ỦY BAN MẶT TRẬN TỔ QUỐC VIỆT NAM
+                    </h2>
+                    <h1 class="text-lg sm:text-2xl font-black uppercase tracking-tight text-white mb-1 leading-tight">
+                        PHƯỜNG ĐÔNG TRIỀU
+                    </h1>
+                    <p class="text-xs sm:text-sm font-medium text-yellow-100 uppercase tracking-wide">
+                        CỔNG TIẾP NHẬN, XỬ LÝ PHẢN ÁNH, KIẾN NGHỊ CỦA NHÂN DÂN
+                    </p>
+                </div>
+            </div>
+            <i class="fa-solid font-star text-white/5 text-9xl absolute -right-6 -bottom-10 pointer-events-none"></i>
+        </div>
+
+        <!-- Navigation Tabs Bar -->
+        <div class="bg-brand-darkRed shadow-inner">
+            <div class="max-w-3xl mx-auto flex">
+                <button id="tab-btn-form" onclick="switchTab('form')" class="flex-1 py-3 px-4 text-center font-bold text-sm sm:text-base border-b-4 border-yellow-400 text-yellow-300 bg-black/10 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>Gửi Phản ánh, Kiến nghị</span>
+                </button>
+                <button id="tab-btn-lookup" onclick="switchTab('lookup')" class="flex-1 py-3 px-4 text-center font-semibold text-sm sm:text-base border-b-4 border-transparent text-white/80 hover:text-white transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Tra cứu hồ sơ</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-3xl w-full mx-auto p-3 sm:p-5 flex-1">
+        
+        <!-- TAB 1: FORM GUI PHAN ANH -->
+        <div id="tab-form" class="space-y-5">
+            <form id="feedbackForm" onsubmit="handleFormSubmit(event)" class="space-y-5">
+                
+                <!-- Section 1: Khai bao thong tin -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-brand-red text-white px-4 py-3 font-semibold flex items-center gap-2.5">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <span>Khai báo thông tin</span>
+                    </div>
+                    <div class="p-4 sm:p-5 space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">
+                                Họ và tên <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="fullname" required placeholder="Nhập họ và tên" 
+                                class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">
+                                Số điện thoại <span class="text-red-500">*</span>
+                            </label>
+                            <input type="tel" id="phone" required pattern="[0-9]{10}" maxlength="10" placeholder="Nhập số điện thoại (10 số)" 
+                                class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">
+                                Số CCCD <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="cccd" required pattern="[0-9]{12}" maxlength="12" placeholder="Nhập số CCCD (12 số)" 
+                                class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">
+                                Khu phố / Tổ dân cư <span class="text-red-500">*</span>
+                            </label>
+                            <select id="area" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition text-sm bg-white">
+                                <option value="" disabled selected>-- Chọn khu phố / tổ dân cư --</option>
+                                <option value="Khu phố Nguyễn Bình">Nguyễn Bình</option>
+                                <option value="Khu phố Yên Lâm">Yên Lâm</option>
+                                <option value="Khu phố Mỹ Cụ">Mỹ Cụ</option>
+                                <option value="Khu phố Bình Lục">Bình Lục</option>
+                                <option value="Khu phố Đông Mai">Đông Mai</option>
+                                <option value="Khu phố Đạm Thủy">Đạm Thủy</option>
+                                <option value="Khu phố Đoàn Xá">Đoàn Xá</option>
+                                <option value="Khu phố Trạo Hà">Trạo Hà</option>
+                                <option value="Khu phố An Biên">An Biên</option>
+                                <option value="Khu phố Vân Giang">Vân Giang</option>
+                                <option value="Khu phố Mễ Xá">Mễ Xá</option>
+                                <option value="Khác">Khác / Chưa rõ</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">
+                                Email liên hệ <span class="text-xs font-normal text-slate-400">(Không bắt buộc)</span>
+                            </label>
+                            <input type="email" id="email" placeholder="Nhập email để nhận mã tra cứu tự động" 
+                                class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Noi dung phan anh -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-brand-red text-white px-4 py-3 font-semibold flex items-center gap-2.5">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Nội dung phản ánh</span>
+                    </div>
+                    <div class="p-4 sm:p-5 space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">
+                                Lĩnh vực phản ánh, kiến nghị <span class="text-red-500">*</span>
+                            </label>
+                            <select id="category" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition text-sm bg-white">
+                                <option value="" disabled selected>Chọn lĩnh vực</option>
+                                <option value="Đô thị - Môi trường">Đô thị - Môi trường</option>
+                                <option value="An ninh - Trật tự">An ninh - Trật tự</option>
+                                <option value="Thủ tục hành chính">Thủ tục hành chính</option>
+                                <option value="Quản lý đất đai">Quản lý đất đai</option>
+                                <option value="Trật tự xây dựng">Trật tự xây dựng</option>
+                                <option value="An sinh xã hội">An sinh xã hội</option>
+                                <option value="Lĩnh vực khác">Lĩnh vực khác</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">
+                                Tiêu đề phản ánh <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="title" required placeholder="Tóm tắt ngắn gọn nội dung phản ánh" 
+                                class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition text-sm">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="block text-sm font-semibold text-slate-700">
+                                    Chi tiết nội dung phản ánh <span class="text-red-500">*</span>
+                                </label>
+                                <span id="charCount" class="text-xs text-slate-400 font-medium">0/30 ký tự</span>
+                            </div>
+                            <textarea id="detail" required minlength="30" rows="4" oninput="updateCharCount(this)"
+                                placeholder="Nêu cụ thể địa điểm, thời gian, diễn biến sự việc cần kiến nghị (tối thiểu 30 ký tự)..." 
+                                class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition text-sm resize-y"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">
+                                Tài liệu, hình ảnh minh chứng đính kèm <span class="text-xs font-normal text-slate-400">(Không bắt buộc)</span>
+                            </label>
+                            <div class="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center bg-slate-50 hover:bg-slate-100/80 transition">
+                                <input type="file" id="fileAttachment" accept="image/*,.pdf,.doc,.docx" class="hidden" onchange="handleFileSelect(event)">
+                                <div class="flex flex-col items-center justify-center cursor-pointer" onclick="document.getElementById('fileAttachment').click()">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="bg-red-100 text-brand-red text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-red-200 transition">
+                                            <i class="fa-solid fa-paperclip mr-1"></i> Chọn tệp
+                                        </span>
+                                        <span id="fileNameDisplay" class="text-xs text-slate-500 truncate max-w-[200px]">Chưa chọn tệp nào</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400">
+                                        Hỗ trợ ảnh chụp (JPG, PNG) hoặc tài liệu văn bản (PDF, DOC). Dung lượng tối đa: 5MB.
+                                    </p>
+                                </div>
+                                
+                                <div id="previewContainer" class="hidden mt-3 pt-3 border-t border-slate-200 flex items-center justify-center gap-3">
+                                    <img id="imagePreview" src="" class="h-20 w-20 object-cover rounded-lg border border-slate-300 hidden" alt="Preview">
+                                    <div id="fileInfo" class="text-left text-xs text-slate-600 hidden">
+                                        <p id="previewName" class="font-semibold text-slate-800"></p>
+                                        <p id="previewSize" class="text-slate-400"></p>
+                                    </div>
+                                    <button type="button" onclick="removeAttachment()" class="text-red-500 hover:text-red-700 text-xs px-2 py-1">
+                                        <i class="fa-solid fa-trash-can"></i> Xóa
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" id="btnSubmit" class="w-full bg-brand-red hover:bg-brand-darkRed text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 text-base">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Gửi phản ánh, kiến nghị</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- TAB 2: TRA CUU HO SO -->
+        <div id="tab-lookup" class="space-y-5 hidden">
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+                <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-brand-red"></i>
+                    Tra cứu tiến độ xử lý hồ sơ
+                </h3>
+                <p class="text-xs text-slate-500 mb-4">
+                    Nhập <strong>Mã hồ sơ</strong>, <strong>Số điện thoại</strong> hoặc <strong>Số CCCD</strong> để kiểm tra tình trạng tiếp nhận và giải quyết.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" id="searchInput" placeholder="Nhập Mã phản ánh (VD: PA-2026...), SĐT hoặc CCCD" 
+                        class="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent text-sm">
+                    <button onclick="performSearch()" class="bg-brand-red hover:bg-brand-darkRed text-white px-5 py-2.5 rounded-lg font-semibold text-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Tra cứu</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Results Area -->
+            <div id="searchResults" class="space-y-3"></div>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-white text-center py-6 px-4 mt-8 border-t-4 border-brand-red">
+        <div class="max-w-3xl mx-auto space-y-1.5 text-xs sm:text-sm text-slate-300">
+            <p class="font-bold text-sm sm:text-base text-yellow-300 uppercase">
+                ỦY BAN MẶT TRẬN TỔ QUỐC VIỆT NAM PHƯỜNG ĐÔNG TRIỀU
+            </p>
+            <p><i class="fa-solid fa-location-dot text-brand-red mr-1"></i> Địa chỉ: Khu phố Trạo Hà, Phường Đông Triều, Thành phố Quảng Ninh</p>
+            <p class="text-slate-400 text-xs">Hệ thống thông tin tiếp nhận, xử lý phản ánh kiến nghị trực tuyến của Nhân dân</p>
+        </div>
+    </footer>
+
+    <div id="successModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center shadow-2xl animate-fade-in space-y-4">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            
+            <div>
+                <h3 class="text-xl font-bold text-slate-800">Gửi phản ánh thành công!</h3>
+                <p class="text-xs text-slate-500 mt-1">Cảm ơn bạn đã gửi ý kiến đóng góp cho Ủy ban Mặt trận Tổ quốc.</p>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
+                <span class="text-xs text-slate-500 block mb-1">Mã tra cứu hồ sơ của bạn</span>
+                <div class="flex items-center justify-center gap-2">
+                    <span id="generatedCode" class="text-xl font-extrabold text-brand-red tracking-wider">PA-2026-XXXXX</span>
+                    <button onclick="copyCode()" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded text-slate-700 transition" title="Sao chép">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+            <p class="text-xs text-slate-500 text-left bg-yellow-50 p-2.5 rounded-lg border border-yellow-200">
+                <i class="fa-solid fa-circle-info text-amber-500 mr-1"></i> Vui lòng lưu lại mã phản ánh này để tra cứu tiến độ xử lý ở mục "Tra cứu hồ sơ".
+            </p>
+
+            <button onclick="closeModalAndSwitchTab()" class="w-full bg-brand-red hover:bg-brand-darkRed text-white font-bold py-2.5 rounded-lg text-sm transition">
+                Xem trạng thái hồ sơ ngay
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKI34IsLvfIzNfOdbx55wPHcm9oH08tPHT_HkoOmRZbKw9irur2kwSTV4O2JW-iJLq/exec';
+
+        const defaultRecords = [
+            {
+                id: "PA-20260915-8821",
+                fullname: "Nguyễn Văn An",
+                phone: "0912345678",
+                cccd: "022090001234",
+                area: "Khu phố Nguyễn Bình",
+                category: "Đô thị - Môi trường",
+                title: "Tình trạng rác thải chưa gom tại hẻm 12 khu 3",
+                detail: "Tuyển đường khu phố Nguyễn Bình liên tục tồn đọng rác thải chưa thu gom từ đầu tuần gây mất vệ sinh môi trường.",
+                status: "Đã xử lý",
+                createdDate: "15/09/2026 08:30",
+                response: "UBND và MTTQ Phường đã cử đội vệ sinh môi trường dọn dẹp xong vào 14h00 cùng ngày."
+            }
+        ];
+
+        function initStorage() {
+            if (!localStorage.getItem('mttq_feedbacks')) {
+                localStorage.setItem('mttq_feedbacks', JSON.stringify(defaultRecords));
+            }
+        }
+
+        function switchTab(tab) {
+            const formTab = document.getElementById('tab-form');
+            const lookupTab = document.getElementById('tab-lookup');
+            const btnForm = document.getElementById('tab-btn-form');
+            const btnLookup = document.getElementById('tab-btn-lookup');
+
+            if (tab === 'form') {
+                formTab.classList.remove('hidden');
+                lookupTab.classList.add('hidden');
+                
+                btnForm.className = "flex-1 py-3 px-4 text-center font-bold text-sm sm:text-base border-b-4 border-yellow-400 text-yellow-300 bg-black/10 transition flex items-center justify-center gap-2";
+                btnLookup.className = "flex-1 py-3 px-4 text-center font-semibold text-sm sm:text-base border-b-4 border-transparent text-white/80 hover:text-white transition flex items-center justify-center gap-2";
+            } else {
+                formTab.classList.add('hidden');
+                lookupTab.classList.remove('hidden');
+
+                btnLookup.className = "flex-1 py-3 px-4 text-center font-bold text-sm sm:text-base border-b-4 border-yellow-400 text-yellow-300 bg-black/10 transition flex items-center justify-center gap-2";
+                btnForm.className = "flex-1 py-3 px-4 text-center font-semibold text-sm sm:text-base border-b-4 border-transparent text-white/80 hover:text-white transition flex items-center justify-center gap-2";
+                
+                performSearch();
+            }
+        }
+
+        function updateCharCount(textarea) {
+            const count = textarea.value.length;
+            const display = document.getElementById('charCount');
+            display.innerText = `${count}/30 ký tự`;
+            if (count < 30) {
+                display.classList.add('text-red-500');
+                display.classList.remove('text-slate-400');
+            } else {
+                display.classList.remove('text-red-500');
+                display.classList.add('text-slate-400');
+            }
+        }
+
+        let selectedFileBase64 = null;
+        let selectedFileName = '';
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Dung lượng tệp vượt quá 5MB. Vui lòng chọn tệp nhỏ hơn.');
+                event.target.value = '';
+                return;
+            }
+
+            selectedFileName = file.name;
+            document.getElementById('fileNameDisplay').innerText = file.name;
+            const previewContainer = document.getElementById('previewContainer');
+            const imgPreview = document.getElementById('imagePreview');
+            const fileInfo = document.getElementById('fileInfo');
+            
+            previewContainer.classList.remove('hidden');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedFileBase64 = e.target.result; // Lưu chuỗi mã hóa mã Base64 của tệp
+                if (file.type.startsWith('image/')) {
+                    imgPreview.src = e.target.result;
+                    imgPreview.classList.remove('hidden');
+                    fileInfo.classList.add('hidden');
+                } else {
+                    imgPreview.classList.add('hidden');
+                    fileInfo.classList.remove('hidden');
+                    document.getElementById('previewName').innerText = file.name;
+                    document.getElementById('previewSize').innerText = (file.size / 1024).toFixed(1) + ' KB';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeAttachment() {
+            document.getElementById('fileAttachment').value = '';
+            document.getElementById('fileNameDisplay').innerText = 'Chưa chọn tệp nào';
+            document.getElementById('previewContainer').classList.add('hidden');
+            selectedFileBase64 = null;
+            selectedFileName = '';
+        }
+
+        let currentGeneratedCode = '';
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const btnSubmit = document.getElementById('btnSubmit');
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Đang gửi...</span>`;
+
+            const fullname = document.getElementById('fullname').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const cccd = document.getElementById('cccd').value.trim();
+            const area = document.getElementById('area').value;
+            const email = document.getElementById('email').value.trim();
+            const category = document.getElementById('category').value;
+            const title = document.getElementById('title').value.trim();
+            const detail = document.getElementById('detail').value.trim();
+
+            if (detail.length < 30) {
+                alert('Nội dung phản ánh phải tối thiểu 30 ký tự.');
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane"></i><span>Gửi phản ánh, kiến nghị</span>`;
+                return;
+            }
+
+            const dateStr = new Date().toISOString().slice(0,10).replace(/-/g, "");
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            currentGeneratedCode = `PA-${dateStr}-${randomNum}`;
+
+            const now = new Date();
+            const formattedDate = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+            const newRecord = {
+                id: currentGeneratedCode,
+                fullname,
+                phone,
+                cccd,
+                area,
+                email,
+                category,
+                title,
+                content: detail,
+                detail,
+                fileName: selectedFileName,
+                fileData: selectedFileBase64, // Mã hóa dữ liệu tệp gửi lên Google Drive
+                attachment: selectedFileBase64,
+                status: "Đã tiếp nhận",
+                createdAt: formattedDate,
+                createdDate: formattedDate,
+                response: "Hồ sơ vừa được gửi. Ban công tác Mặt trận đang phân loại và chuyển đơn vị xử lý."
+            };
+
+            const list = JSON.parse(localStorage.getItem('mttq_feedbacks') || '[]');
+            list.unshift(newRecord);
+            localStorage.setItem('mttq_feedbacks', JSON.stringify(list));
+
+            try {
+                if (GOOGLE_SCRIPT_URL) {
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newRecord)
+                    });
+                }
+            } catch (error) {
+                console.error("Lỗi gửi Google Sheet:", error);
+            }
+
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane"></i><span>Gửi phản ánh, kiến nghị</span>`;
+
+            document.getElementById('generatedCode').innerText = currentGeneratedCode;
+            document.getElementById('successModal').classList.remove('hidden');
+        }
+
+        function closeModalAndSwitchTab() {
+            document.getElementById('successModal').classList.add('hidden');
+            document.getElementById('feedbackForm').reset();
+            removeAttachment();
+            document.getElementById('charCount').innerText = '0/30 ký tự';
+            
+            switchTab('lookup');
+            document.getElementById('searchInput').value = currentGeneratedCode;
+            performSearch();
+        }
+
+        function copyCode() {
+            const codeText = document.getElementById('generatedCode').innerText;
+            const tempInput = document.createElement('input');
+            tempInput.value = codeText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('Đã sao chép mã phản ánh: ' + codeText);
+        }
+
+        async function performSearch() {
+            const query = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+            const container = document.getElementById('searchResults');
+
+            if (!query) {
+                container.innerHTML = `
+                    <div class="bg-amber-50 p-4 rounded-xl text-center text-amber-700 border border-amber-200 text-xs sm:text-sm">
+                        <i class="fa-solid fa-triangle-exclamation mr-1"></i> Vui lòng nhập Mã phản ánh, Số điện thoại hoặc Số CCCD để tra cứu.
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="bg-white p-8 rounded-xl text-center text-slate-500 border border-slate-200 text-sm">
+                    <i class="fa-solid fa-spinner fa-spin text-2xl text-brand-red mb-2 block"></i>
+                    Đang tìm kiếm hồ sơ từ hệ thống...
+                </div>`;
+
+            let list = [];
+
+            if (typeof GOOGLE_SCRIPT_URL !== 'undefined' && GOOGLE_SCRIPT_URL) {
+                try {
+                    const response = await fetch(GOOGLE_SCRIPT_URL + '?t=' + new Date().getTime());
+                    if (response.ok) {
+                        const sheetData = await response.json();
+                        if (Array.isArray(sheetData)) {
+                            list = sheetData;
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Chuyển sang tìm kiếm bộ nhớ tạm LocalStorage...", e);
+                }
+            }
+
+            const localData = JSON.parse(localStorage.getItem('mttq_feedbacks') || '[]');
+            const combinedList = [...list];
+            localData.forEach(localItem => {
+                if (!combinedList.some(item => item.id === localItem.id)) {
+                    combinedList.push(localItem);
+                }
+            });
+
+            const filtered = combinedList.filter(item => {
+                const id = String(item.id || '').toLowerCase();
+                const phone = String(item.phone || '').toLowerCase();
+                const cccd = String(item.cccd || '').toLowerCase();
+                const fullname = String(item.fullname || item.fullName || '').toLowerCase();
+
+                return id.includes(query) || phone.includes(query) || cccd.includes(query) || fullname.includes(query);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white p-8 rounded-xl text-center text-slate-500 border border-slate-200 space-y-2">
+                        <i class="fa-solid fa-folder-open text-4xl text-slate-300"></i>
+                        <p class="text-sm font-semibold text-slate-700">Không tìm thấy hồ sơ phù hợp</p>
+                        <p class="text-xs text-slate-400">Rất tiếc, không tìm thấy phản ánh nào khớp với thông tin "<strong>${escapeHtml(query)}</strong>". Vui lòng kiểm tra lại chính xác Mã hồ sơ, SĐT hoặc CCCD.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            filtered.forEach(item => {
+                let statusBadge = '';
+                const status = item.status || 'Đã tiếp nhận';
+                
+                if (status === 'Đã tiếp nhận') {
+                    statusBadge = `<span class="bg-blue-100 text-blue-700 font-semibold text-xs px-2.5 py-1 rounded-full"><i class="fa-solid fa-clock mr-1"></i>Đã tiếp nhận</span>`;
+                } else if (status === 'Đang xử lý') {
+                    statusBadge = `<span class="bg-amber-100 text-amber-700 font-semibold text-xs px-2.5 py-1 rounded-full"><i class="fa-solid fa-arrows-rotate fa-spin mr-1"></i>Đang xử lý</span>`;
+                } else {
+                    statusBadge = `<span class="bg-emerald-100 text-emerald-700 font-semibold text-xs px-2.5 py-1 rounded-full"><i class="fa-solid fa-circle-check mr-1"></i>Đã giải quyết</span>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-slate-200 space-y-3";
+                card.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                        <div>
+                            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Mã phản ánh</span>
+                            <span class="text-base font-bold text-brand-red font-mono">${escapeHtml(item.id)}</span>
+                        </div>
+                        <div>${statusBadge}</div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm sm:text-base">${escapeHtml(item.title || 'Không có tiêu đề')}</h4>
+                        <div class="flex flex-wrap items-center gap-y-1 gap-x-4 text-xs text-slate-500 mt-1">
+                            <span><i class="fa-solid fa-layer-group text-slate-400 mr-1"></i>${escapeHtml(item.category || 'Khác')}</span>
+                            <span><i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>${escapeHtml(item.area || 'Chưa rõ')}</span>
+                            <span><i class="fa-regular fa-calendar-check text-slate-400 mr-1"></i>${escapeHtml(item.createdAt || item.createdDate || '')}</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 text-xs text-slate-700">
+                        <strong class="text-slate-900 font-semibold block mb-1">Nội dung phản ánh:</strong>
+                        <p class="whitespace-pre-line leading-relaxed">${escapeHtml(item.detail || item.content || '')}</p>
+                    </div>
+
+                    ${item.fileUrl ? `
+                        <div class="text-xs text-slate-600">
+                            <i class="fa-solid fa-paperclip mr-1 text-slate-400"></i>Tệp đính kèm: 
+                            <a href="${item.fileUrl}" target="_blank" class="text-blue-600 hover:underline font-medium">Xem/Tải file trên Google Drive</a>
+                        </div>
+                    ` : ''}
+
+                    ${item.response ? `
+                        <div class="bg-red-50/70 border border-red-100 p-3 rounded-lg text-xs space-y-1">
+                            <span class="font-bold text-brand-red block"><i class="fa-solid fa-reply mr-1"></i> Kết quả / Tiến độ xử lý:</span>
+                            <p class="text-slate-700 leading-relaxed">${escapeHtml(item.response)}</p>
+                        </div>
+                    ` : ''}
+
+                    <div class="text-right text-xs text-slate-400 pt-1 border-t border-slate-50">
+                        Người gửi: <span class="font-medium text-slate-600">${escapeHtml(item.fullname || item.fullName || '')}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+        }
+
+        window.onload = function() {
+            initStorage();
+        };
+    </script>
+</body>
+</html>
